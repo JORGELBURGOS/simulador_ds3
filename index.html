@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang='es'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Simulador Estratégico NewPay</title>
+    <link rel='stylesheet' href='style.css'>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'>
+    <script src='https://cdn.jsdelivr.net/npm/chart.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js'></script>
+</head>
+<body>
+    <div class='container'>
+        <header>
+            <h1><i class='fas fa-chart-line'></i> Simulador Estratégico NewPay</h1>
+            <nav id='main-nav'>
+                <ul>
+                    <li><a href='#dashboard' class='active'><i class='fas fa-tachometer-alt'></i> Dashboard</a></li>
+                    <li><a href='#productos'><i class='fas fa-boxes'></i> Productos</a></li>
+                    <li><a href='#clientes'><i class='fas fa-users'></i> Clientes</a></li>
+                    <li><a href='#entorno'><i class='fas fa-globe-americas'></i> Análisis del Entorno</a></li>
+                    <li><a href='#competitivo'><i class='fas fa-chess'></i> Análisis Competitivo</a></li>
+                    <li><a href='#bcg'><i class='fas fa-matrix'></i> Matriz BCG</a></li>
+                    <li><a href='#estrategias'><i class='fas fa-chess-knight'></i> Estrategias</a></li>
+                    <li><a href='#pl'><i class='fas fa-file-invoice-dollar'></i> P&L</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <!-- Sección Dashboard -->
+            <section id='dashboard' class='active-section'>
+                <h2><i class='fas fa-tachometer-alt'></i> Dashboard KPIs</h2>
+                <div class='kpi-container'>
+                    <div class='kpi-card'>
+                        <h3>EBITDA</h3>
+                        <div class='kpi-value' id='ebitda-kpi'>$0</div>
+                        <div class='kpi-trend up'><i class='fas fa-arrow-up'></i> 0%</div>
+                    </div>
+                    <div class='kpi-card'>
+                        <h3>ROI</h3>
+                        <div class='kpi-value' id='roi-kpi'>0%</div>
+                        <div class='kpi-trend down'><i class='fas fa-arrow-down'></i> 0%</div>
+                    </div>
+                    <div class='kpi-card'>
+                        <h3>Transacciones</h3>
+                        <div class='kpi-value' id='transactions-kpi'>0</div>
+                        <div class='kpi-trend neutral'><i class='fas fa-equals'></i> 0%</div>
+                    </div>
+                    <div class='kpi-card'>
+                        <h3>NPS</h3>
+                        <div class='kpi-value' id='nps-kpi'>0</div>
+                        <div class='kpi-trend neutral'><i class='fas fa-equals'></i> 0%</div>
+                    </div>
+                </div>
+
+                <div class='chart-container'>
+                    <canvas id='revenue-chart'></canvas>
+                </div>
+
+                <div class='chart-container'>
+                    <canvas id='transactions-chart'></canvas>
+                </div>
+
+                <div class='alerts-container'>
+                    <h3>Alertas Estratégicas</h3>
+                    <div id='strategic-alerts'></div>
+                </div>
+            </section>
+
+            <!-- Sección Productos -->
+            <section id='productos'>
+                <h2><i class='fas fa-boxes'></i> Productos y Unidades de Negocio</h2>
+                <div class='tabs'>
+                    <button class='tab-btn active' data-tab='digital-payments'>Digital Payments</button>
+                    <button class='tab-btn' data-tab='instant-payments'>Instant Payments</button>
+                    <button class='tab-btn' data-tab='add-product'>Agregar Producto</button>
+                </div>
+
+                <div class='tab-content active' id='digital-payments'>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Clientes</th>
+                                <th>Transacciones</th>
+                                <th>Valor Unitario</th>
+                                <th>Revenue</th>
+                                <th>Crecimiento</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id='digital-products-table'>
+                            <!-- JS populated -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class='tab-content' id='instant-payments'>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Clientes</th>
+                                <th>Transacciones</th>
+                                <th>Valor Unitario</th>
+                                <th>Revenue</th>
+                                <th>Crecimiento</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id='instant-products-table'>
+                            <!-- JS populated -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class='tab-content' id='add-product'>
+                    <form id='add-product-form'>
+                        <div class='form-group'>
+                            <label for='new-product'>Seleccionar Producto:</label>
+                            <select id='new-product' required>
+                                <option value=''>-- Seleccione --</option>
+                                <option value='QR Crédito + Transferencias 3.0'>QR Crédito + Transferencias 3.0</option>
+                                <option value='Prevención del Fraude'>Prevención del Fraude</option>
+                                <option value='Extracción con Transferencias'>Extracción con Transferencias</option>
+                                <option value='Transferencias Recurrentes'>Transferencias Recurrentes</option>
+                                <option value='Master Send y Visa Direct'>Master Send y Visa Direct</option>
+                                <option value='Payouts'>Payouts</option>
+                                <option value='Cripto'>Cripto</option>
+                                <option value='Remesas'>Remesas</option>
+                            </select>
+                        </div>
+                        <div class='form-group'>
+                            <label for='product-unit'>Unidad de Negocio:</label>
+                            <select id='product-unit' required>
+                                <option value='Digital Payments'>Digital Payments</option>
+                                <option value='Instant Payments'>Instant Payments</option>
+                            </select>
+                        </div>
+                        <button type='submit' class='btn'>Agregar Producto</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Sección Clientes -->
+            <section id='clientes'>
+                <h2><i class='fas fa-users'></i> Clientes</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Productos</th>
+                            <th>Transacciones</th>
+                            <th>Revenue</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id='clients-table'>
+                        <!-- JS populated -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Sección Análisis del Entorno -->
+            <section id='entorno'>
+                <h2><i class='fas fa-globe-americas'></i> Análisis del Entorno</h2>
+                <div class='tabs'>
+                    <button class='tab-btn active' data-tab='pestel-variables'>Variables</button>
+                    <button class='tab-btn' data-tab='pestel-analysis'>Análisis</button>
+                    <button class='tab-btn' data-tab='pestel-strategies'>Estrategias</button>
+                </div>
+
+                <div class='tab-content active' id='pestel-variables'>
+                    <form id='pestel-form'>
+                        <div class='pestel-category'>
+                            <h3><i class='fas fa-landmark'></i> Político</h3>
+                            <div class='variables-container' id='political-vars'>
+                                <!-- JS populated -->
+                            </div>
+                            <button type='button' class='btn add-variable' data-category='political'>+ Agregar Variable</button>
+                        </div>
+
+                        <div class='pestel-category'>
+                            <h3><i class='fas fa-chart-line'></i> Económico</h3>
+                            <div class='variables-container' id='economic-vars'>
+                                <!-- JS populated -->
+                            </div>
+                            <button type='button' class='btn add-variable' data-category='economic'>+ Agregar Variable</button>
+                        </div>
+
+                        <div class='pestel-category'>
+                            <h3><i class='fas fa-users'></i> Social</h3>
+                            <div class='variables-container' id='social-vars'>
+                                <!-- JS populated -->
+                            </div>
+                            <button type='button' class='btn add-variable' data-category='social'>+ Agregar Variable</button>
+                        </div>
+
+                        <div class='pestel-category'>
+                            <h3><i class='fas fa-microchip'></i> Tecnológico</h3>
+                            <div class='variables-container' id='technological-vars'>
+                                <!-- JS populated -->
+                            </div>
+                            <button type='button' class='btn add-variable' data-category='technological'>+ Agregar Variable</button>
+                        </div>
+
+                        <div class='pestel-category'>
+                            <h3><i class='fas fa-leaf'></i> Ecológico</h3>
+                            <div class='variables-container' id='ecological-vars'>
+                                <!-- JS populated -->
+                            </div>
+                            <button type='button' class='btn add-variable' data-category='ecological'>+ Agregar Variable</button>
+                        </div>
+
+                        <div class='pestel-category'>
+                            <h3><i class='fas fa-gavel'></i> Legal</h3>
+                            <div class='variables-container' id='legal-vars'>
+                                <!-- JS populated -->
+                            </div>
+                            <button type='button' class='btn add-variable' data-category='legal'>+ Agregar Variable</button>
+                        </div>
+
+                        <button type='submit' class='btn'>Guardar Análisis</button>
+                    </form>
+                </div>
+
+                <div class='tab-content' id='pestel-analysis'>
+                    <div class='chart-container'>
+                        <canvas id='pestel-radar'></canvas>
+                    </div>
+                    <div class='impact-summary' id='pestel-impact-summary'>
+                        <!-- JS populated -->
+                    </div>
+                </div>
+
+                <div class='tab-content' id='pestel-strategies'>
+                    <div id='pestel-strategies-container'>
+                        <!-- JS populated -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección Análisis Competitivo -->
+            <section id='competitivo'>
+                <h2><i class='fas fa-chess'></i> Análisis Competitivo</h2>
+                <div class='tabs'>
+                    <button class='tab-btn active' data-tab='porter-variables'>Variables</button>
+                    <button class='tab-btn' data-tab='porter-analysis'>Análisis</button>
+                    <button class='tab-btn' data-tab='porter-strategies'>Estrategias</button>
+                </div>
+
+                <div class='tab-content active' id='porter-variables'>
+                    <form id='porter-form'>
+                        <div class='porter-category'>
+                            <h3><i class='fas fa-user-plus'></i> Amenaza de nuevos entrantes</h3>
+                            <div class='variables-container' id='new-entrants-vars'>
+                                <!-- JS populated -->
+                            </div>
+                            <button type='button' class='btn add-variable' data-category='new-entrants'>+ Agregar Variable</button>
+                        </div>
+
+                        <div class='porter-category'>
+                            <h3><i class='fas fa-users'></i> Poder de negociación de clientes</h3>
+                            <div class='variables-container' id='buyers-vars'>
+                                <!-- JS populated -->
+                            </div>
+                            <button type='button' class='btn add-variable' data-category='buyers'>+ Agregar Variable</button>
+                        </div>
+
+                        <div class='porter-category'>
+                            <h3><i class='fas fa-exchange-alt'></i> Amenaza de productos sustitutos</h3>
+                            <div class='variables-container' id='substitutes-vars'>
+                                <!-- JS populated -->
+                            </div>
+                            <button type='button' class='btn add-variable' data-category='substitutes'>+ Agregar Variable</button>
+                        </div>
+
+                        <div class='porter-category'>
+                            <h3><i class='fas fa-industry'></i> Competencia actual</h3>
+                            <div class='variables-container' id='competition-vars'>
+                                <!-- JS populated -->
+                            </div>
+                            <button type='button' class='btn add-variable' data-category='competition'>+ Agregar Variable</button>
+                        </div>
+
+                        <div class='porter-category'>
+                            <h3><i class='fas fa-truck'></i> Poder de negociación de proveedores</h3>
+                            <div class='variables-container' id='suppliers-vars'>
+                                <!-- JS populated -->
+                            </div>
+                            <button type='button' class='btn add-variable' data-category='suppliers'>+ Agregar Variable</button>
+                        </div>
+
+                        <button type='submit' class='btn'>Guardar Análisis</button>
+                    </form>
+                </div>
+
+                <div class='tab-content' id='porter-analysis'>
+                    <div class='chart-container'>
+                        <canvas id='porter-radar'></canvas>
+                    </div>
+                    <div class='impact-summary' id='porter-impact-summary'>
+                        <!-- JS populated -->
+                    </div>
+                </div>
+
+                <div class='tab-content' id='porter-strategies'>
+                    <div id='porter-strategies-container'>
+                        <!-- JS populated -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección Matriz BCG -->
+            <section id='bcg'>
+                <h2><i class='fas fa-matrix'></i> Matriz BCG</h2>
+                <div class='bcg-container'>
+                    <div class='bcg-matrix'>
+                        <div class='bcg-quadrant' id='star'>
+                            <h3>Estrella</h3>
+                            <div class='bcg-products' id='star-products'></div>
+                        </div>
+                        <div class='bcg-quadrant' id='question'>
+                            <h3>Incógnita</h3>
+                            <div class='bcg-products' id='question-products'></div>
+                        </div>
+                        <div class='bcg-quadrant' id='cash-cow'>
+                            <h3>Vaca Lechera</h3>
+                            <div class='bcg-products' id='cash-cow-products'></div>
+                        </div>
+                        <div class='bcg-quadrant' id='dog'>
+                            <h3>Perro</h3>
+                            <div class='bcg-products' id='dog-products'></div>
+                        </div>
+                    </div>
+
+                    <div class='bcg-controls'>
+                        <form id='bcg-form'>
+                            <div class='form-group'>
+                                <label for='bcg-product'>Producto:</label>
+                                <select id='bcg-product' required>
+                                    <!-- JS populated -->
+                                </select>
+                            </div>
+                            <div class='form-group'>
+                                <label for='market-growth'>% Crecimiento del mercado:</label>
+                                <input type='number' id='market-growth' min='0' max='100' step='0.1' required>
+                            </div>
+                            <div class='form-group'>
+                                <label for='market-share'>% Participación de mercado:</label>
+                                <input type='number' id='market-share' min='0' max='100' step='0.1' required>
+                            </div>
+                            <div class='form-group'>
+                                <label for='growth-strategy'>Estrategia de crecimiento:</label>
+                                <select id='growth-strategy' required>
+                                    <option value='penetration'>Penetración de Mercado</option>
+                                    <option value='development'>Desarrollo de Producto</option>
+                                    <option value='expansion'>Expansión de Mercado</option>
+                                    <option value='diversification'>Diversificación</option>
+                                </select>
+                            </div>
+                            <button type='submit' class='btn'>Actualizar</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class='ansoff-strategies'>
+                    <h3>Estrategias Ansoff</h3>
+                    <div id='ansoff-strategies-container'>
+                        <!-- JS populated -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección Estrategias -->
+            <section id='estrategias'>
+                <h2><i class='fas fa-chess-knight'></i> Estrategias</h2>
+                <div class='tabs'>
+                    <button class='tab-btn active' data-tab='available-strategies'>Estrategias Disponibles</button>
+                    <button class='tab-btn' data-tab='active-strategies'>Estrategias Activas</button>
+                    <button class='tab-btn' data-tab='add-strategy'>Crear Estrategia</button>
+                </div>
+
+                <div class='tab-content active' id='available-strategies'>
+                    <div id='available-strategies-container'>
+                        <!-- JS populated -->
+                    </div>
+                </div>
+
+                <div class='tab-content' id='active-strategies'>
+                    <div id='active-strategies-container'>
+                        <!-- JS populated -->
+                    </div>
+                </div>
+
+                <div class='tab-content' id='add-strategy'>
+                    <form id='new-strategy-form'>
+                        <div class='form-group'>
+                            <label for='strategy-name'>Nombre:</label>
+                            <input type='text' id='strategy-name' required>
+                        </div>
+                        <div class='form-group'>
+                            <label for='strategy-type'>Tipo:</label>
+                            <select id='strategy-type' required>
+                                <option value=''>-- Seleccione --</option>
+                                <option value='PESTEL'>Del Análisis del Entorno</option>
+                                <option value='Porter'>Del Análisis Competitivo</option>
+                                <option value='Ansoff'>De la Matriz BCG</option>
+                                <option value='custom'>Personalizada</option>
+                            </select>
+                        </div>
+                        <div class='form-group'>
+                            <label for='strategy-product'>Producto asociado:</label>
+                            <select id='strategy-product'>
+                                <!-- JS populated -->
+                            </select>
+                        </div>
+                        <div class='form-group'>
+                            <label for='strategy-investment'>Inversión estimada:</label>
+                            <input type='number' id='strategy-investment' min='0' step='1000' required>
+                        </div>
+                        <div class='form-group'>
+                            <label for='strategy-duration'>Duración (meses):</label>
+                            <input type='number' id='strategy-duration' min='1' max='36' required>
+                        </div>
+                        <div class='form-group'>
+                            <label for='strategy-growth'>% Crecimiento esperado:</label>
+                            <input type='number' id='strategy-growth' min='0' max='100' step='0.1' required>
+                        </div>
+                        <button type='submit' class='btn'>Crear Estrategia</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Sección P&L -->
+            <section id='pl'>
+                <h2><i class='fas fa-file-invoice-dollar'></i> Estado de Resultados (P&L)</h2>
+                <div class='tabs'>
+                    <button class='tab-btn active' data-tab='pl-summary'>Resumen</button>
+                    <button class='tab-btn' data-tab='pl-details'>Detalles por Producto</button>
+                    <button class='tab-btn' data-tab='pl-comparison'>Comparativas</button>
+                </div>
+
+                <div class='tab-content active' id='pl-summary'>
+                    <div class='pl-summary-container'>
+                        <div class='pl-card'>
+                            <h3>Ingresos</h3>
+                            <div class='pl-value' id='revenue-value'>$0</div>
+                            <div class='pl-change' id='revenue-change'>0%</div>
+                        </div>
+                        <div class='pl-card'>
+                            <h3>Costos Operativos</h3>
+                            <div class='pl-value' id='op-costs-value'>$0</div>
+                            <div class='pl-change' id='op-costs-change'>0%</div>
+                        </div>
+                        <div class='pl-card'>
+                            <h3>Gastos Generales</h3>
+                            <div class='pl-value' id='gen-expenses-value'>$0</div>
+                            <div class='pl-change' id='gen-expenses-change'>0%</div>
+                        </div>
+                        <div class='pl-card'>
+                            <h3>EBITDA</h3>
+                            <div class='pl-value' id='ebitda-value'>$0</div>
+                            <div class='pl-change' id='ebitda-change'>0%</div>
+                        </div>
+                    </div>
+
+                    <div class='chart-container'>
+                        <canvas id='pl-chart'></canvas>
+                    </div>
+                </div>
+
+                <div class='tab-content' id='pl-details'>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Ingresos</th>
+                                <th>Costos</th>
+                                <th>Margen</th>
+                                <th>% del Total</th>
+                                <th>Tendencia</th>
+                            </tr>
+                        </thead>
+                        <tbody id='pl-details-table'>
+                            <!-- JS populated -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class='tab-content' id='pl-comparison'>
+                    <div class='comparison-controls'>
+                        <select id='comparison-type'>
+                            <option value='month'>Mes a Mes</option>
+                            <option value='year'>Año a Año</option>
+                            <option value='budget'>vs Budget</option>
+                        </select>
+                    </div>
+                    <div class='chart-container'>
+                        <canvas id='comparison-chart'></canvas>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Simulador Estratégico NewPay &copy; 2023</p>
+        </footer>
+    </div>
+
+    <!-- Modal -->
+    <div id='modal' class='modal'>
+        <div class='modal-content'>
+            <span class='close-modal'>&times;</span>
+            <div id='modal-body'></div>
+        </div>
+    </div>
+
+    <script src='app.js'></script>
+</body>
+</html>
